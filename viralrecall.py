@@ -173,8 +173,8 @@ def parse_hmmout(hmmout, evalue):
 	hit_dict = defaultdict(lambda:"NA")
 	bit_dict = defaultdict(float)
 	hit2pfam = {}
-	gvog2norm = get_accs("acc/gvog_summary.tsv")
-	pfam2norm = get_accs("acc/pfam_summary.tsv")
+	gvog2norm = get_accs("/acc/gvog_summary.tsv")
+	pfam2norm = get_accs("/acc/pfam_summary.tsv")
 
 	for i in input.readlines():
 		line = i.rstrip()
