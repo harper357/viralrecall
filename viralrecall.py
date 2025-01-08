@@ -40,7 +40,7 @@ def predict_proteins(genome_file, project, redo, batch):
 	# get vog hmm descriptions
 def get_annot(database):
 	if database == "general":
-		input = open("hmm/vog.annotations.tsv", "r")
+		input = open("/hmm/vog.annotations.tsv", "r")
 		vdesc = defaultdict(lambda:"NA")
 		for i in input.readlines():
 			line = i.rstrip()
@@ -50,7 +50,7 @@ def get_annot(database):
 			vdesc[vog] = desc
 		return vdesc
 	else:
-		input = open("hmm/gvog_annotation.tsv", "r")
+		input = open("/hmm/gvog_annotation.tsv", "r")
 		vdesc = defaultdict(lambda:"NA")
 		for i in input.readlines():
 			line = i.rstrip("\n")
@@ -141,18 +141,18 @@ def run_hmmer(input_file, db, suffix, cpus, redo, evalue):
 	output_file = re.sub(".faa$", suffix, input_file)
 	#print(output_file)
 	if suffix == ".pfamout":
-		cmd = "hmmsearch --cut_nc --cpu "+ cpus +" --tblout "+ output_file +" hmm/pfam.hmm "+ input_file
+		cmd = "hmmsearch --cut_nc --cpu "+ cpus +" --tblout "+ output_file +" /hmm/pfam.hmm "+ input_file
 		#print(cmd)
 	elif suffix == ".vogout":
 		if db == "general":
-			vogdb = "hmm/vogdb.hmm"
+			vogdb = "/hmm/vogdb.hmm"
 			cmd = "hmmsearch --cpu "+ cpus +" --tblout "+ output_file +" "+ vogdb +" "+ input_file
 		elif db == "GVOG":
-			vogdb = "hmm/gvog.hmm"
+			vogdb = "/hmm/gvog.hmm"
 			cmd = "hmmsearch --cpu "+ cpus +" --tblout "+ output_file +" "+ vogdb +" "+ input_file	
 			#print(cmd)
 		elif db == "marker":
-			vogdb = "hmm/NCLDV_markers.hmm"
+			vogdb = "/hmm/NCLDV_markers.hmm"
 			cmd = "hmmsearch --cpu "+ cpus +" --tblout "+ output_file +" "+ vogdb +" "+ input_file	
 #			#print(cmd)
 
@@ -223,7 +223,7 @@ def parse_hmmout(hmmout, evalue):
 # run HMMER3 on marker genes only
 def marker_hmmer(input_file, cpus, redo):
 	output_file = re.sub(".faa", ".markerout", input_file)
-	cmd = "hmmsearch --cpu "+ cpus +" --tblout "+ output_file +" hmm/NCLDV_markers.hmm "+ input_file	
+	cmd = "hmmsearch --cpu "+ cpus +" --tblout "+ output_file +" /hmm/NCLDV_markers.hmm "+ input_file	
 	cmd2 = shlex.split(cmd)
 
 	if not redo:
@@ -369,11 +369,11 @@ def run_program(input, project, database, window, phagesize, minscore, minhit, e
 		
 	else:
 	
-		if not os.path.exists("hmm/gvog.hmm") or not os.path.exists("hmm/vogdb.hmm"):
-			raise("Can't seem to find the hmm databases in the hmm/ directory. Please see GitHub for download instructions")
+		if not os.path.exists("/hmm/gvog.hmm") or not os.path.exists("/hmm/vogdb.hmm"):
+			raise("Can't seem to find the hmm databases in the /hmm/ directory. Please see GitHub for download instructions")
 		
 		vog_out  = run_hmmer(protein_file, database, ".vogout", cpus, redo, evalue)
-		pfam_out = run_hmmer(protein_file, "hmm/pfam.hmm", ".pfamout", cpus, redo, evalue)
+		pfam_out = run_hmmer(protein_file, "/hmm/pfam.hmm", ".pfamout", cpus, redo, evalue)
 
 		vog_hit, vog_bit = parse_hmmout(vog_out, evalue)
 		pfam_hit, pfam_bit = parse_hmmout(pfam_out, evalue)
